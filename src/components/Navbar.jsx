@@ -27,11 +27,11 @@ import {
   Paid,
   PointOfSale,
   Settings,
-  StarBorder,
+
 } from "@mui/icons-material";
 import DoNotDisturbIcon from "@mui/icons-material/DoNotDisturb";
-import { useNavigate } from "react-router-dom";
-import { Collapse, ListSubheader } from "@mui/material";
+import { Link } from "react-router-dom";
+import { Collapse } from "@mui/material";
 
 const drawerWidth = 240;
 
@@ -214,7 +214,6 @@ export default function Navbar() {
     false,
     false,
   ]);
-  const navigate = useNavigate();
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -222,10 +221,6 @@ export default function Navbar() {
 
   const handleDrawerClose = () => {
     setOpen(false);
-  };
-
-  const handleListClick = (path) => {
-    navigate(path);
   };
 
   const handleParentClick = (index) => {
@@ -269,16 +264,14 @@ export default function Navbar() {
         <Divider />
         <List>
           {navBarOptions.map((option, index) => (
-            <>
+            <Link to={option.path}>
               <ListItemButton
-                key={option.text}
                 sx={{
                   minHeight: 48,
                   justifyContent: open ? "initial" : "center",
                   px: 2.5,
                 }}
                 component="nav"
-                aria-labelledby="nested-list-subheader"
                 onClick={() => {
                   handleParentClick(index);
                 }}
@@ -300,15 +293,19 @@ export default function Navbar() {
               </ListItemButton>
               <Collapse in={openParents[index]} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
-                  {option.parents.map((parent, index) => (
-                    <ListItemButton key={index} sx={{ pl: 4 }}>
-                      <ListItemIcon>{renderListIcon(parent.icon)}</ListItemIcon>
-                      <ListItemText primary={parent.text}/>
-                    </ListItemButton>
+                  {option.parents.map((parent, index2) => (
+                    <Link to={parent.path}>
+                      <ListItemButton sx={{ pl: 4 }}>
+                        <ListItemIcon>
+                          {renderListIcon(parent.icon)}
+                        </ListItemIcon>
+                        <ListItemText primary={parent.text} />
+                      </ListItemButton>
+                    </Link>
                   ))}
                 </List>
               </Collapse>
-            </>
+            </Link>
           ))}
         </List>
         <Divider />
@@ -321,7 +318,7 @@ export default function Navbar() {
                 justifyContent: open ? "initial" : "center",
                 px: 2.5,
               }}
-              onClick={() => handleListClick(option.path)}
+              onClick={() => handleParentClick(option.path)}
             >
               <ListItemIcon
                 sx={{
